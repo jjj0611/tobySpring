@@ -46,6 +46,7 @@ public class UserDao {
 		return user;
 	}
 	
+	// 공통된 기능을 담당하는 메소드로 중복된 코드를 뽑아내는 것을 리팩토링에서는 메서드 추출기법(extract method)이라고 부른다.
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8", "spring", "book");
