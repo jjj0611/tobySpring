@@ -10,14 +10,17 @@ import springbook.user.domain.User;
 
 public class UserDao {
 	
-	private SimpleConnectionMaker simpleConnectionMaker;
+	// ConnectionMaker 인터페이스를 다형성을 이용해서 구현하여 사용하도록 함.
+	private ConnectionMaker connectionMaker;
 	
-	public UserDao() {
-		simpleConnectionMaker = new SimpleConnectionMaker();
+	// connectionMaker가 여전히 하나의 단일한 커넥션을 받는 것이 문제임
+	// 생성자를 통해 connectionMaker 객체를 주입 받도록 하자.
+	public UserDao(ConnectionMaker connectionMaker) {
+		this.connectionMaker = connectionMaker;
 	}
 	
 	public void add(User user) throws ClassNotFoundException, SQLException {
-		Connection c = simpleConnectionMaker.makeNewConnection();
+		Connection c = connectionMaker.makeConnection();
 
 		PreparedStatement ps = c.prepareStatement(
 			"insert into users(id, name, password) values(?,?,?)");
@@ -33,7 +36,7 @@ public class UserDao {
 
 
 	public User get(String id) throws ClassNotFoundException, SQLException {
-		Connection c = simpleConnectionMaker.makeNewConnection();
+		Connection c = connectionMaker.makeConnection();
 		
 		PreparedStatement ps = c
 				.prepareStatement("select * from users where id = ?");
@@ -53,24 +56,5 @@ public class UserDao {
 		return user;
 	}
 	
-	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-		UserDao dao = new NUserDao();
-
-		User user = new User();
-		user.setId("jj0611");
-		user.setName("Jaeju,Jang");
-		user.setPassword("notmarried");
-
-		dao.add(user);
-			
-		System.out.println(user.getId() + " 등록성공");
-		
-		User user2 = dao.get(user.getId());
-		System.out.println(user2.getName());
-		System.out.println(user2.getPassword());
-			
-		System.out.println(user2.getId() + " 조회 성공");
-	}
 
 }
