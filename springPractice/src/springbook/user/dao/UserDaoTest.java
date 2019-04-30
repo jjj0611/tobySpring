@@ -9,9 +9,9 @@ public class UserDaoTest {
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		
-		ConnectionMaker connectionMaker = new DConnectionMaker();
+		DaoFactory daoFactory = new DaoFactory();
 		
-		UserDao dao = new UserDao(connectionMaker);
+		UserDao dao = daoFactory.userDao();
 		
 		User user = new User(); 
 		user.setId("jj0611");
